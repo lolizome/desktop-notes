@@ -140,3 +140,12 @@ body {
   margin-right: 0.5rem;
   cursor: pointer;
 }
+
+.app-wrapper {
+  user-select: none;
+  -webkit-app-region: drag;
+}
+
+.app-wrapper div {
+  -webkit-app-region: none !important;
+}
