@@ -146,6 +146,7 @@ body {
   -webkit-app-region: drag;
 }
 
-.app-wrapper div {
-  -webkit-app-region: none !important;
+.app-wrapper button {
+  -webkit-app-region: no-drag !important;
+  cursor: pointer;
 }

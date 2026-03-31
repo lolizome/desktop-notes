@@ -11,6 +11,27 @@ if (require("electron-squirrel-startup")) {
   app.quit()
 }
 
+// Listener for window control events from the renderer process
+ipcMain.on(
+  "mainWindow-control",
+  (ev, action: "close" | "maximize" | "minimize") => {
+    const win = BrowserWindow.fromWebContents(ev.sender)
+    if (!win || win.isDestroyed()) return
+
+    const actions = {
+      close: () => win.destroy(),
+      maximize: () => (win.isMaximized() ? win.unmaximize() : win.maximize()),
+      minimize: () => win.minimize(),
+    }
+
+    // if (actions[action]) {
+    actions[action]?.()
+    // } else {
+    // console.error("accion no valida", action)
+    // }
+  },
+)
+
 const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -31,23 +52,6 @@ const createWindow = (): void => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
-
-  // Listener for window control events from the renderer process
-  ipcMain.on(
-    "mainWindow-control",
-    (ev, action: "close" | "maximize" | "minimize") => {
-      const actions = {
-        close: () => mainWindow.close(),
-        maximize: () =>
-          mainWindow.isMaximized()
-            ? mainWindow.unmaximize()
-            : mainWindow.maximize(),
-        minimize: () => mainWindow.minimize(),
-      }
-
-      actions[action]?.()
-    },
-  )
 }
 
 // This method will be called when Electron has finished
