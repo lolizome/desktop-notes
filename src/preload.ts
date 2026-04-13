@@ -8,6 +8,11 @@ const renderer = {
   windowControl: (action: "close" | "maximize" | "minimize") => {
     ipcRenderer.send("mainWindow-control", action)
   },
+  setNote: async (data: any) => {
+    const notes = await ipcRenderer.invoke("setNote", data)
+    console.log("notes", notes)
+    return notes
+  },
 }
 
 contextBridge.exposeInMainWorld("electron", renderer)
