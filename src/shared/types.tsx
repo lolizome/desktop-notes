@@ -5,3 +5,8 @@ export interface IMainState extends IMainStateObject {
 export interface IMainStateObject {
   activeNote: any
 }
+
+export interface INoteData {
+  id: number | null
+  note: string
+}

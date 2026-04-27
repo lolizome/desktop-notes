@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from "electron"
 import sqlite3 from "sqlite3"
+import { setNote } from "./database/db"
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -24,16 +25,16 @@ ipcMain.on(
   },
 )
 
-ipcMain.handle("setNote", async (ev, data) => {
-  try {
-    console.log("datos: ", data)
-    return { success: true, savedData: data }
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "error desconocido",
-    }
-  }
+ipcMain.handle("setNote", async (ev, args) => {
+  return new Promise((resolve) => {
+    setNote(args, (result: any) => {
+      if (result) {
+        resolve({ success: true, savedData: result })
+      } else {
+        resolve({ success: false, error: "Error to fetch notes" })
+      }
+    })
+  })
 })
 
 const createWindow = (): void => {

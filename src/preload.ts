@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron"
+import { INoteData } from "./shared/types"
 
 /**
  * Send windowControl commands to the main process
@@ -8,10 +9,15 @@ const renderer = {
   windowControl: (action: "close" | "maximize" | "minimize") => {
     ipcRenderer.send("mainWindow-control", action)
   },
-  setNote: async (data: any) => {
-    const notes = await ipcRenderer.invoke("setNote", data)
-    console.log("notes", notes)
-    return notes
+  setNote: async (data: any): Promise<INoteData[]> => {
+    const response = await ipcRenderer.invoke("setNote", data)
+
+    if (response.success) {
+      return response.savedData
+    } else {
+      console.error(response.error)
+      return []
+    }
   },
 }
 

@@ -1,20 +1,40 @@
+import { INoteData } from "@/shared/types"
 import sqlite3 from "sqlite3"
 
 const sqlite = sqlite3.verbose()
 const db = new sqlite.Database("notes.sql")
 
-db.serialize(() => {
-  db.run("CREATE TABLE lorem (info TEXT")
+const createTable = () => {
+  db.run(
+    "CREATE TABLE IF NOT EXISTS notes (id INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT, note TEXT)",
+  )
+}
 
-  const stmt = db.prepare("INSERT INTO lorem VALUES (?)")
-  for (let i = 0; i < 10; i++) {
-    stmt.run("Ipsum " + i)
-  }
-  stmt.finalize()
+export const setNote = (data: INoteData, callback: Function) => {
+  db.serialize(() => {
+    createTable()
 
-  db.each("SELECT rowid AS id, info FROM lorem", (err, row) => {
-    // console.log(row.id + ": " row.info);
+    const stmt = db.prepare(
+      "INSERT OR REPLACE INTO notes (id, note) VALUES (?, ?)",
+    )
+    stmt.run(data.id, data.note, (err: Error | null) => {
+      if (err) {
+        console.error(err)
+        return
+      }
+      getAllNote(callback)
+    })
+    stmt.finalize()
   })
-})
+}
 
-db.close()
+export const getAllNote = (callback: Function) => {
+  db.serialize(() => {
+    db.all("SELECT * FROM notes ORDER BY id DESC", (err, data) => {
+      if (err) return null
+      callback(data)
+    })
+  })
+}
+
+// db.close()
