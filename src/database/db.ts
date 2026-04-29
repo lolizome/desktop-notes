@@ -22,13 +22,13 @@ export const setNote = (data: INoteData, callback: Function) => {
         console.error(err)
         return
       }
-      getAllNote(callback)
+      getAllNotes(callback)
     })
     stmt.finalize()
   })
 }
 
-export const getAllNote = (callback: Function) => {
+export const getAllNotes = (callback: Function) => {
   db.serialize(() => {
     db.all("SELECT * FROM notes ORDER BY id DESC", (err, data) => {
       if (err) return null

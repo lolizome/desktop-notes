@@ -25,3 +25,11 @@ export const WindowButtons = React.memo((props: any) => {
     </div>
   )
 })
+
+export const notesItem = React.memo((props: any) => {
+  return (
+    <div>
+      <div></div>
+    </div>
+  )
+})

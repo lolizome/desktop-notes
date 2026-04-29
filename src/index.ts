@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron"
 import sqlite3 from "sqlite3"
-import { setNote } from "./database/db"
+import { getAllNotes, setNote } from "./database/db"
+import { INoteData } from "@/shared/types"
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -54,6 +55,10 @@ const createWindow = (): void => {
   process.platform === "darwin" && mainWindow.setWindowButtonVisibility(true)
 
   mainWindow.webContents.openDevTools()
+
+  getAllNotes((data: INoteData) => {
+    mainWindow.webContents.send("onStartNotes", data)
+  })
 }
 
 app.on("ready", createWindow)

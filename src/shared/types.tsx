@@ -8,5 +8,35 @@ export interface IMainStateObject {
 
 export interface INoteData {
   id: number | null
-  note: string
+  note: string | TNote
 }
+
+export type TNote = {
+  type: string
+  content: TNoteBlock[]
+}
+
+export type TNoteBlock = {
+  type: string
+  content: [
+    {
+      type: string
+      text: string
+    },
+  ]
+}
+
+// Example of Note
+//     "type": "doc",
+//     "content": [
+//         {
+//             "type": "paragraph",
+//             "content": [
+//                 {
+//                     "type": "text",
+//                     "text": "Start to write...dfgd"
+//                 }
+//             ]
+//         }
+//     ]
+// }

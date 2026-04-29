@@ -10,6 +10,12 @@ import { useMainStore } from "@/shared/useMainStore"
 import EmptyNote from "./EmptyNote"
 import { INoteData } from "@/shared/types"
 
+declare global {
+  interface WindowEventMap {
+    allNotesData: CustomEvent<INoteData[]>
+  }
+}
+
 export const Wrapper = React.memo((props: any) => {
   const activeNote = useMainStore((state) => state.activeNote)
   const setState = useMainStore((state) => state.set_state)
@@ -21,13 +27,26 @@ export const Wrapper = React.memo((props: any) => {
       note: "",
     } as INoteData
 
-    const updatedNotes = await window.electron.setNote(dummyData)
+    const updatedNotes = await window.electron.setNote(dummyData, false)
     if (updatedNotes) {
-      setNotes(updatedNotes)
       setState("activeNote", updatedNotes[0])
+      setNotes(updatedNotes)
     }
     // setNotes(notes)
   }, [setNotes])
+
+  React.useLayoutEffect(() => {
+    const handler = (ev: Event & { detail: INoteData[] }) => {
+      console.log("ev", ev.detail)
+      if (ev.detail[0] && ev.detail[0].id! == activeNote?.id) {
+        setState("activeNote", ev.detail[0])
+      }
+      setNotes(notes)
+    }
+    window.addEventListener("allNotesData", handler)
+    return () => window.removeEventListener("allNotesData", handler)
+  }, [notes])
+
   return (
     <div className="w-full h-screen">
       <ResizablePanelGroup orientation="horizontal">
