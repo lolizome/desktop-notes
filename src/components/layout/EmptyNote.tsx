@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/Button"
 import { Plus } from "lucide-react"
 
 export default React.memo((props: { newNote: Function }) => {
+  console.log("h")
   return (
     <div className="w-full h[100%] bg-amber-100 flex items-center justify-center">
       <Button

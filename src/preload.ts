@@ -18,7 +18,6 @@ const renderer = {
   },
   setNote: async (data: any, explicit: boolean): Promise<INoteData[]> => {
     const response = await ipcRenderer.invoke("setNote", data)
-    console.log("response", response)
 
     if (explicit) {
       window.dispatchEvent(broadcastEvent("allNotesData", response))

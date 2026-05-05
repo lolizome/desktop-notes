@@ -12,24 +12,24 @@ export interface INoteData {
 }
 
 export type TNote = {
+  time: number
+  blocks: TNoteBlock[]
   type: string
-  content: TNoteBlock[]
 }
 
 export type TNoteBlock = {
+  id: string
   type: string
-  content: [
-    {
-      type: string
-      text: string
-    },
-  ]
+  data: {
+    text: string
+  }
 }
 
 // Example of Note
 //     "type": "doc",
 //     "content": [
 //         {
+//             "time": "number",
 //             "type": "paragraph",
 //             "content": [
 //                 {
